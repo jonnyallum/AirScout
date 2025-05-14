@@ -1,0 +1,312 @@
+{
+  "name": "Booking Notification Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "booking-notification",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"event_type\"]}}",
+              "operation": "equal",
+              "value2": "new_booking"
+            }
+          ]
+        }
+      },
+      "name": "New Booking?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$env.EMAIL_FROM}}",
+        "toEmail": "={{$json[\"host_email\"]}}",
+        "subject": "New Booking Received - AirScout",
+        "text": "=Hello,\n\nYou have received a new booking for your property \"{{$json[\"listing_title\"]}}\".\n\nBooking Details:\n- Guest: {{$json[\"guest_name\"]}} ({{$json[\"guest_email\"]}})\n- Check-in: {{$json[\"check_in\"]}}\n- Check-out: {{$json[\"check_out\"]}}\n- Guests: {{$json[\"guests\"]}}\n- Total Amount: £{{$json[\"total_amount\"] / 100}}\n\nYou can view the full details in your AirScout dashboard.\n\nThank you for hosting with AirScout!\n\nBest regards,\nThe AirScout Team",
+        "options": {}
+      },
+      "name": "Send Host Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        650,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$env.EMAIL_FROM}}",
+        "toEmail": "={{$json[\"guest_email\"]}}",
+        "subject": "Booking Confirmation - AirScout",
+        "text": "=Hello {{$json[\"guest_name\"]}},\n\nYour booking for \"{{$json[\"listing_title\"]}}\" has been confirmed!\n\nBooking Details:\n- Check-in: {{$json[\"check_in\"]}}\n- Check-out: {{$json[\"check_out\"]}}\n- Guests: {{$json[\"guests\"]}}\n- Total Amount: £{{$json[\"total_amount\"] / 100}}\n\nProperty Address and Check-in Instructions:\nThe host will contact you with the exact address and check-in instructions closer to your arrival date.\n\nIf you have any questions, you can contact your host at {{$json[\"host_email\"]}}.\n\nThank you for booking with AirScout!\n\nBest regards,\nThe AirScout Team",
+        "options": {}
+      },
+      "name": "Send Guest Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        650,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"event_type\"]}}",
+              "operation": "equal",
+              "value2": "booking_cancelled"
+            }
+          ]
+        }
+      },
+      "name": "Booking Cancelled?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        450,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$env.EMAIL_FROM}}",
+        "toEmail": "={{$json[\"host_email\"]}}",
+        "subject": "Booking Cancelled - AirScout",
+        "text": "=Hello,\n\nA booking for your property \"{{$json[\"listing_title\"]}}\" has been cancelled.\n\nBooking Details:\n- Guest: {{$json[\"guest_name\"]}} ({{$json[\"guest_email\"]}})\n- Check-in: {{$json[\"check_in\"]}}\n- Check-out: {{$json[\"check_out\"]}}\n\nYou can view the full details in your AirScout dashboard.\n\nBest regards,\nThe AirScout Team",
+        "options": {}
+      },
+      "name": "Send Host Cancellation",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        650,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$env.EMAIL_FROM}}",
+        "toEmail": "={{$json[\"guest_email\"]}}",
+        "subject": "Booking Cancellation Confirmed - AirScout",
+        "text": "=Hello {{$json[\"guest_name\"]}},\n\nYour booking cancellation for \"{{$json[\"listing_title\"]}}\" has been processed.\n\nBooking Details:\n- Check-in: {{$json[\"check_in\"]}}\n- Check-out: {{$json[\"check_out\"]}}\n\nRefund Information:\nYour refund of £{{$json[\"refund_amount\"] / 100}} has been initiated and should appear in your account within 5-10 business days, depending on your payment method and bank.\n\nIf you have any questions about your refund, please contact our support team.\n\nWe hope to see you book with AirScout again in the future!\n\nBest regards,\nThe AirScout Team",
+        "options": {}
+      },
+      "name": "Send Guest Cancellation",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        650,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"event_type\"]}}",
+              "operation": "equal",
+              "value2": "payout_processed"
+            }
+          ]
+        }
+      },
+      "name": "Payout Processed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        450,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{$env.EMAIL_FROM}}",
+        "toEmail": "={{$json[\"host_email\"]}}",
+        "subject": "Payout Processed - AirScout",
+        "text": "=Hello,\n\nWe're pleased to inform you that your payout of £{{$json[\"amount\"] / 100}} has been processed and is on its way to your bank account.\n\nPayout Details:\n- Amount: £{{$json[\"amount\"] / 100}}\n- Period: {{$json[\"period\"]}}\n- Transaction ID: {{$json[\"transaction_id\"]}}\n\nThe funds should appear in your account within 5-7 business days, depending on your bank's processing times.\n\nYou can view your complete earnings history in your AirScout dashboard.\n\nThank you for hosting with AirScout!\n\nBest regards,\nThe AirScout Team",
+        "options": {}
+      },
+      "name": "Send Payout Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        650,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"success\": true }",
+        "options": {}
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        850,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "New Booking?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New Booking?": {
+      "main": [
+        [
+          {
+            "node": "Send Host Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Booking Cancelled?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Host Email": {
+      "main": [
+        [
+          {
+            "node": "Send Guest Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Guest Email": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Booking Cancelled?": {
+      "main": [
+        [
+          {
+            "node": "Send Host Cancellation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Payout Processed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Host Cancellation": {
+      "main": [
+        [
+          {
+            "node": "Send Guest Cancellation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Guest Cancellation": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Payout Processed?": {
+      "main": [
+        [
+          {
+            "node": "Send Payout Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Payout Email": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "versionId": "1",
+  "id": "1",
+  "meta": {
+    "instanceId": "1"
+  },
+  "tags": [
+    {
+      "name": "email",
+      "color": "#00FF00"
+    },
+    {
+      "name": "notifications",
+      "color": "#0000FF"
+    }
+  ]
+}
