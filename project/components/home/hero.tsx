@@ -29,18 +29,33 @@ export default function Hero() {
       <div className="relative h-full flex items-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 30 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
             className="max-w-2xl text-white"
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+            <motion.h1 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight"
+            >
               Find your perfect getaway
-            </h1>
-            <p className="text-lg md:text-xl opacity-90 mb-8">
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.9 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="text-lg md:text-xl mb-8"
+            >
               Discover unique places to stay around the world. Book with confidence and travel with ease.
-            </p>
-            <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-lg w-full max-w-md">
+            </motion.p>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.7 }}
+              className="bg-white/95 backdrop-blur-sm dark:bg-gray-900/95 p-6 rounded-2xl shadow-2xl w-full max-w-md border border-white/20"
+            >
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -50,7 +65,7 @@ export default function Hero() {
                     <input
                       type="text"
                       placeholder="Search destinations"
-                      className="w-full py-2 pl-10 pr-4 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full py-2 pl-10 pr-4 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-black"
                     />
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   </div>
@@ -62,7 +77,7 @@ export default function Hero() {
                     </label>
                     <input
                       type="date"
-                      className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-black"
                     />
                   </div>
                   <div>
@@ -71,7 +86,7 @@ export default function Hero() {
                     </label>
                     <input
                       type="date"
-                      className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-black"
                     />
                   </div>
                 </div>
@@ -79,7 +94,7 @@ export default function Hero() {
                   Search
                 </Button>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>
